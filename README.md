@@ -1,71 +1,117 @@
-# Salon Management System (SMS) - Developer Responsibility Matrix
+# Salon Management System (SMS)
 
-> **Master Responsibility Matrix for all 3 developers across the 4-week build plan.**
+A digital operational and financial management system designed for salons in Rwanda. SMS replaces paper-based tracking with real-time transaction logging, automated barber commission splits (50/50 split), Mobile Money (MoMo) payment tracking, fraud detection, and remote owner oversight.
 
 ---
 
-## 👨‍💻 Developer 1: Cashier Desk Lead
+## 🛠️ Technical Stack
 
+- **Framework**: Next.js 14 (App Router) + React 18 + TypeScript
+- **Styling**: Tailwind CSS + Custom Design System
+- **Icons**: Lucide React
+- **Analytics & Charts**: Recharts
+- **State Engine**: React Context (`SalonContext`) simulating offline-first storage and instant cross-dashboard state synchronization
+
+---
+
+## 📁 Project Directory Structure
+
+```text
+Salon_Management_System/
+├── app/
+│   ├── layout.tsx                 # Root layout with SalonProvider & AppShell
+│   ├── page.tsx                   # Landing page / Role selector hub
+│   ├── globals.css                # Tailwind base & custom styles
+│   ├── cashier/
+│   │   ├── page.tsx               # Dev 1: Cashier Billing Counter (/cashier)
+│   │   └── expenses/page.tsx      # Dev 1: Daily Expense Logger (/cashier/expenses)
+│   ├── barber/
+│   │   ├── page.tsx               # Dev 2: Barber Personal Wallet (/barber)
+│   │   ├── leaderboard/page.tsx   # Dev 2: Staff Ranking Leaderboard (/barber/leaderboard)
+│   │   └── history/page.tsx       # Dev 2: Barber Work History Timeline (/barber/history)
+│   └── admin/
+│       ├── page.tsx               # Dev 3: Executive Admin Overview (/admin)
+│       ├── analytics/page.tsx     # Dev 3: Peak Hours & Traffic Charts (/admin/analytics)
+│       ├── fraud/page.tsx         # Dev 3: Fraud & Discrepancy Logs (/admin/fraud)
+│       └── settings/page.tsx      # Dev 3: Remote Owner Override Lock (/admin/settings)
+├── src/
+│   ├── components/
+│   │   └── layout/AppShell.tsx    # Responsive Shell & Top Navigation bar
+│   ├── context/
+│   │   └── SalonContext.tsx       # Global mock state engine & real-time sync
+│   └── types/
+│       └── index.ts               # Master domain models (User, Service, Transaction, Expense, FraudAlert)
+├── DEVELOPER_PROMPT.md            # Mandatory team rules & developer coding prompt
+├── README.md                      # Project documentation & responsibility matrix
+├── package.json                   # Project dependencies & scripts
+├── tsconfig.json                  # TypeScript configuration with @/* path aliases
+├── tailwind.config.ts             # Tailwind CSS theme configuration
+└── postcss.config.mjs             # PostCSS configuration
+```
+
+---
+
+## 👨‍💻 Developer Responsibility Matrix
+
+### Developer 1: Cashier Desk Lead
 - **Primary Role**: Front Desk Operations, Fast Billing Counter, Payment Toggles & Daily Expense Logging
 - **Assigned Routes**: `/cashier` (Billing Counter), `/cashier/expenses` (Daily Expense Logger)
-- **Key Deliverables & Responsibilities**:
-  - **Week 1 (Setup & Shells)**:
-    - Build `/cashier` route shell and service catalog array.
-    - Create service selection card grid with price badges in RWF.
-    - Design side drawer layout for quick checkout.
-  - **Week 2 (Deep Feature Build)**:
-    - Implement interactive checkout drawer with assigned barber selector dropdown.
-    - Build payment method toggle (`[MTN MoMo Pay]` vs `[Cash Payment]`) with optional MoMo transaction reference input.
-    - Display automatic 50/50 split calculation (e.g. 3,000 RWF total $\rightarrow$ 1,500 RWF Barber / 1,500 RWF House).
-    - Build live daily transaction stream showing recent customer checkout history.
-    - Build `/cashier/expenses` view to log supplies (blades, shaving creams) and utility costs.
-  - **Week 3 (Offline Engine)**:
-    - Connect checkout form to write directly to IndexedDB / local browser storage so cashiers can bill customers even when internet is down.
-  - **Week 4 (Polish & QA)**:
-    - Optimize all touch targets to be at least $48\text{px} \times 48\text{px}$ for fast mobile tablet tapping.
-    - Add real-time search/filter bar for service catalog.
+- **Deliverables**:
+  - Service catalog grid & price cards in RWF.
+  - Checkout drawer & barber selection dropdown.
+  - Cash vs MTN MoMo Pay payment method toggles.
+  - Auto 50/50 barber commission split calculation.
+  - Live daily transaction feed.
+  - Daily expense logging (supplies, blades, creams, utilities).
 
----
-
-## 👨‍💻 Developer 2: Barber Wallet Lead
-
+### Developer 2: Barber Wallet Lead
 - **Primary Role**: Barber Mobile View, Realtime Commission Wallet, Staff Leaderboard & Work Timeline
 - **Assigned Routes**: `/barber` (Personal Wallet), `/barber/leaderboard` (Staff Rankings), `/barber/history` (Work Log Timeline)
-- **Key Deliverables & Responsibilities**:
-  - **Week 1 (Setup & Shells)**:
-    - Build `/barber` route shell and layout for Hero Balance Card.
-    - Design static earnings display and barber profile switcher.
-  - **Week 2 (Deep Feature Build)**:
-    - Implement Hero Balance Card showing today's take-home earnings, gross volume, and daily cut target progress bar.
-    - Build interactive Staff Leaderboard (`/barber/leaderboard`) ranking barbers by daily completed cuts and net earnings.
-    - Build vertical work timeline component (`/barber/history`) listing completed jobs with timestamp and payout details.
-  - **Week 3 (Offline Engine)**:
-    - Subscribe Barber Wallet components to local storage / `SalonContext` state updates so earnings update instantly when cashier logs a cut.
-  - **Week 4 (Polish & QA)**:
-    - Add micro-animations for rank changes and daily cut target milestone achievements.
-    - Test mobile phone screen responsiveness across low-cost Android devices.
+- **Deliverables**:
+  - Hero Balance Card showing today's take-home earnings in RWF.
+  - Real-time 50/50 split calculation breakdown.
+  - Daily cut progress target bar.
+  - Interactive Staff Leaderboard ranking barbers by cuts and net earnings.
+  - Vertical work history timeline with timestamps and payout details.
+
+### Developer 3: Owner Admin & System Architect
+- **Primary Role**: Owner Control Panel, Multi-Tenant Architecture, PWA Offline Shell, Analytics & Remote Override
+- **Assigned Routes**: `/admin` (Executive Overview), `/admin/analytics` (Peak Hours), `/admin/fraud` (Security Alerts), `/admin/settings` (Remote Override)
+- **Deliverables**:
+  - Repository architecture & App Shell layout.
+  - Master domain TypeScript interfaces (`src/types/index.ts`).
+  - Shared `SalonContext` provider (`src/context/SalonContext.tsx`).
+  - 4 Executive KPI Cards (`Gross Revenue`, `Clients Served`, `Active Barbers`, `Fraud Alerts`).
+  - Financial summary breakdown (House Share vs Expenses vs Net Owner Profit).
+  - Peak Hours traffic & revenue visualizer using Recharts.
+  - Sticky green/amber Offline Status Banner & Remote Owner Override lock.
 
 ---
 
-## 👨‍💻 Developer 3: Owner Admin & System Architect
+## 📜 Team Rules & Guidelines
 
-- **Primary Role**: Owner Control Panel, Multi-Tenant Architecture, PWA Offline Shell, Analytics & Remote Override
-- **Assigned Routes**: `/admin` (Executive Overview), `/admin/analytics` (Peak Hours), `/admin/fraud` (Security Alerts), `/admin/settings` (Remote Override)
-- **Key Deliverables & Responsibilities**:
-  - **Week 1 (Setup & Shells)**:
-    - Repository initialization (Next.js 14 App Router, TypeScript, Tailwind CSS, Lucide Icons).
-    - Draft master domain types (`src/types/index.ts`).
-    - Build responsive App Shell (`src/components/layout/AppShell.tsx`) with desktop sidebar and mobile bottom navigation.
-    - Implement `SalonContext` provider (`src/context/SalonContext.tsx`) for global state management.
-  - **Week 2 (Deep Feature Build)**:
-    - Build 4 Executive KPI Cards (`Gross Revenue`, `Clients Served`, `Active Barbers`, `Fraud Alerts`).
-    - Implement financial summary breakdown (House Share vs Expenses vs Net Owner Profit).
-    - Build Peak Hours Analytics chart component (`/admin/analytics`) using Recharts.
-  - **Week 3 (Offline Engine)**:
-    - Configure PWA web manifest (installable to phone home screens).
-    - Create sticky green/amber Offline Status Banner indicating connection state.
-    - Build Remote Owner Override toggle controls (`/admin/settings`) allowing owners to lock sensitive actions remotely.
-  - **Week 4 (Polish & QA)**:
-    - Build Fraud Discrepancy Log screen (`/admin/fraud`) for flagging unpaid services or orphan MoMo payments.
-    - Format exportable daily summary views.
-    - Deploy production build to Vercel/Netlify for Phase 4 Pilot Launch.
+See [DEVELOPER_PROMPT.md](file:///Users/elvisbakunzi/Documents/Projects/Salon_Management_System/DEVELOPER_PROMPT.md) for full developer rules:
+- **Clean Code**: Strict TypeScript safety. Touch targets $\ge 48\text{px}$ on mobile screens.
+- **Minimal Comments**: Explain complex logic only; no decorative comments.
+- **No Emojis**: Emojis are prohibited inside source code, comments, and PR descriptions.
+- **PR Protocol**: Branch naming `feature/<domain>-<name>`. 1 reviewer required before merging to `dev`.
+
+---
+
+## 🚀 Getting Started
+
+1. **Install Dependencies**:
+   ```bash
+   npm install
+   ```
+
+2. **Start Local Development Server**:
+   ```bash
+   npm run dev
+   ```
+
+3. **Access Routes in Browser**:
+   - Role Selector Hub: `http://localhost:3000`
+   - Admin Overview: `http://localhost:3000/admin`
+   - Cashier Desk: `http://localhost:3000/cashier`
+   - Barber Wallet: `http://localhost:3000/barber`
